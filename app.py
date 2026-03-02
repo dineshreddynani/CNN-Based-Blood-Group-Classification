@@ -8,8 +8,13 @@ import os
 
 app = Flask(__name__)
 
-# Load trained model
-model = tf.keras.models.load_model('model/blood_group_model.h5', compile=False)
+import keras
+
+model = keras.models.load_model(
+    'model/blood_group_model.h5',
+    compile=False,
+    safe_mode=False
+)
 
 # Class labels for blood group prediction
 class_names = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
