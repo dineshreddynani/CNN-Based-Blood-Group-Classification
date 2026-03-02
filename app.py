@@ -3,7 +3,6 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import img_to_array
 from PIL import Image
-import cv2
 import os
 
 app = Flask(__name__)
@@ -38,8 +37,11 @@ def create_model():
 # Initialize model
 model = create_model()
 
-# Load only weights (bypasses serialization issues)
+# Load weights
 model.load_weights('model/blood_group_model.h5')
+
+# Warm up model (important for Render cold start)
+model.predict(np.zeros((1, 64, 64, 3)))
 
 print("Model loaded successfully!")
 
@@ -57,31 +59,20 @@ correction_mapping = {
 }
 
 # -------------------------------
-# Image Preprocessing
+# Image Preprocessing (Training Style)
 # -------------------------------
 
-def preprocess_image(image, input_type):
-
-    if input_type == 'trained':
+def preprocess_image(image):
+    try:
         img = image.convert('RGB')
         img = img.resize((64, 64))
-        img_array = img_to_array(img) / 255.0
-        img_array = np.expand_dims(img_array, axis=0)
-        return img_array
-
-    elif input_type == 'real_time':
-        img = image.convert('L')
-        img = img.resize((64, 64), Image.BILINEAR)
         img_array = img_to_array(img)
-
-        img_array = cv2.equalizeHist(img_array.astype(np.uint8))
-        img_array = cv2.cvtColor(img_array, cv2.COLOR_GRAY2RGB)
-
         img_array = img_array / 255.0
         img_array = np.expand_dims(img_array, axis=0)
         return img_array
-
-    return None
+    except Exception as e:
+        print("Preprocessing error:", e)
+        return None
 
 
 # -------------------------------
@@ -100,14 +91,16 @@ def predict():
         return jsonify({'error': 'No file uploaded'})
 
     file = request.files['file']
-    input_type = request.form.get('input_type')
 
     if file.filename == '':
         return jsonify({'error': 'No selected file'})
 
     try:
         image = Image.open(file.stream)
-        processed_image = preprocess_image(image, input_type)
+        processed_image = preprocess_image(image)
+
+        if processed_image is None:
+            return jsonify({'error': 'Image preprocessing failed'})
 
         prediction = model.predict(processed_image)
         predicted_class = class_names[np.argmax(prediction)]
