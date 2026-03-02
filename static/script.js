@@ -1,44 +1,47 @@
-document.getElementById('upload-form').onsubmit = async function (e) {
+const form = document.getElementById('upload-form');
+const preview = document.getElementById('preview-image');
+const uploadText = document.getElementById('upload-text');
+const loader = document.getElementById('loader');
+const resultCard = document.getElementById('result-card');
+const predictionText = document.getElementById('prediction-text');
+const confidenceBar = document.getElementById('confidence-bar');
+const confidenceText = document.getElementById('confidence-text');
+
+document.getElementById('file-input').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        preview.src = event.target.result;
+        preview.classList.remove("hidden");
+        uploadText.style.display = "none";
+    };
+    reader.readAsDataURL(file);
+});
+
+form.onsubmit = async function(e) {
     e.preventDefault();
 
+    loader.classList.remove("hidden");
+    resultCard.classList.add("hidden");
+
     const formData = new FormData(this);
-    const resultText = document.getElementById('result');
-    resultText.innerText = "Processing...";
 
-    try {
-        const response = await fetch('/predict', {
-            method: 'POST',
-            body: formData
-        });
+    const response = await fetch('/predict', {
+        method: 'POST',
+        body: formData
+    });
 
-        const result = await response.json();
+    const result = await response.json();
 
-        if (result.prediction) {
-            resultText.innerText = `🧬 Prediction: ${result.prediction} (Confidence: ${result.confidence})`;
-        } else {
-            resultText.innerText = `❌ Error: ${result.error}`;
-        }
+    loader.classList.add("hidden");
 
-    } catch (error) {
-        resultText.innerText = `❌ Error: ${error.message}`;
+    if (result.prediction) {
+        predictionText.innerText = "Predicted: " + result.prediction;
+        confidenceText.innerText = "Confidence: " + result.confidence;
+
+        const percent = parseFloat(result.confidence);
+        confidenceBar.style.width = percent + "%";
+
+        resultCard.classList.remove("hidden");
     }
 };
-
-// Preview Uploaded Image
-document.getElementById('file-input').addEventListener('change', function (e) {
-    const previewContainer = document.getElementById('preview-container');
-    const previewImage = document.getElementById('preview-image');
-    
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        
-        reader.onload = function (event) {
-            previewImage.src = event.target.result;
-            previewImage.style.display = "block";
-            previewContainer.classList.add('show');
-        }
-        
-        reader.readAsDataURL(file);
-    }
-});
