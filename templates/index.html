@@ -1,39 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>🩸 Blood Group Prediction</title>
+    <title>AI Blood Group Detection</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
-<div class="container">
-    <h1>🧬 Blood Group Prediction from Fingerprint 🧬</h1>
-    
-    <form id="upload-form" enctype="multipart/form-data">
-        <label for="input-type"><b>Select Input Image Type:</b></label><br><br>
-        
-        <select id="input-type" name="input_type" required>
-            <option value="">-- Select Image Type --</option>
-            <option value="trained">Trained Fingerprint</option>
-            <option value="real_time">Real-Time Fingerprint</option>
-        </select>
-        <br><br>
+<div class="background-animation"></div>
 
-        <input type="file" id="file-input" name="file" accept="image/*" required><br><br>
+<div class="card">
+    <h1>🧬 AI Blood Group Detection</h1>
+    <p class="subtitle">Fingerprint Based Deep Learning Prediction</p>
+
+    <form id="upload-form" enctype="multipart/form-data">
         
-        <button type="submit">Predict</button>
+        <label class="drop-zone" id="drop-zone">
+            <input type="file" name="file" id="file-input" accept="image/*" hidden required>
+            <span id="upload-text">Drag & Drop Fingerprint or Click to Upload</span>
+            <img id="preview-image" class="hidden">
+        </label>
+
+        <button type="submit" class="predict-btn">Predict Blood Group</button>
     </form>
 
-    <div id="result"></div>
+    <div id="loader" class="loader hidden"></div>
 
-    <div id="preview-container" style="margin-top:20px;">
-        <h3>Uploaded Fingerprint Preview:</h3>
-        <img id="preview-image" src="#" alt="Preview will appear here" style="max-width:100%; display:none;">
+    <div id="result-card" class="result hidden">
+        <h2 id="prediction-text"></h2>
+        <div class="confidence-container">
+            <div id="confidence-bar"></div>
+        </div>
+        <p id="confidence-text"></p>
     </div>
 </div>
 
 <script src="{{ url_for('static', filename='script.js') }}"></script>
-
 </body>
 </html>
