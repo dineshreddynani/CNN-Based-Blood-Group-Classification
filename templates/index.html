@@ -6,33 +6,69 @@
 </head>
 <body>
 
-<div class="background-animation"></div>
+<header>
+    <h1>AI Blood Group Detection</h1>
+    <p>Fingerprint-based deep learning prediction system</p>
+</header>
 
-<div class="card">
-    <h1>🧬 AI Blood Group Detection</h1>
-    <p class="subtitle">Fingerprint Based Deep Learning Prediction</p>
+<section class="predict-section">
+    <div class="card">
+        <h2>Upload Fingerprint</h2>
 
-    <form id="upload-form" enctype="multipart/form-data">
-        
-        <label class="drop-zone" id="drop-zone">
-            <input type="file" name="file" id="file-input" accept="image/*" hidden required>
-            <span id="upload-text">Drag & Drop Fingerprint or Click to Upload</span>
-            <img id="preview-image" class="hidden">
-        </label>
+        <form id="upload-form" enctype="multipart/form-data">
+            <input type="file" name="file" id="file-input" accept="image/*" required>
+            <button type="submit">Predict Blood Group</button>
+        </form>
 
-        <button type="submit" class="predict-btn">Predict Blood Group</button>
-    </form>
-
-    <div id="loader" class="loader hidden"></div>
-
-    <div id="result-card" class="result hidden">
-        <h2 id="prediction-text"></h2>
-        <div class="confidence-container">
-            <div id="confidence-bar"></div>
+        <div id="preview-container" class="hidden">
+            <img id="preview-image">
         </div>
-        <p id="confidence-text"></p>
+
+        <div id="result" class="hidden">
+            <h3 id="prediction-text"></h3>
+            <p id="confidence-text"></p>
+            <div class="bar">
+                <div id="bar-fill"></div>
+            </div>
+        </div>
     </div>
-</div>
+</section>
+
+<section class="how-it-works">
+    <div class="content">
+        <h2>How It Works</h2>
+
+        <p>
+            This system uses a Convolutional Neural Network (CNN) trained on fingerprint images
+            to classify blood groups.
+        </p>
+
+        <p>
+            When you upload a fingerprint image, it is resized to 64×64 pixels and normalized
+            before being passed to the trained deep learning model.
+        </p>
+
+        <p>
+            The CNN extracts unique ridge pattern features from the fingerprint
+            and compares them against patterns learned during training.
+        </p>
+
+        <p>
+            The model outputs probabilities for all eight blood groups
+            (A+, A-, B+, B-, AB+, AB-, O+, O-).
+        </p>
+
+        <p>
+            The system selects the class with the highest probability
+            and displays both the predicted blood group and confidence score.
+        </p>
+
+        <p>
+            The model is deployed on a cloud-based server using Flask and
+            served via Gunicorn for scalable inference.
+        </p>
+    </div>
+</section>
 
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
