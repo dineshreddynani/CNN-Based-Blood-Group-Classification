@@ -1,75 +1,1132 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>AI Blood Group Detection</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DactoBlood AI — Blood Group Detection</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #05080f;
+    --surface: #0d1117;
+    --surface2: #161b27;
+    --border: rgba(255,255,255,0.06);
+    --red: #e8394a;
+    --red-glow: rgba(232,57,74,0.25);
+    --red-soft: rgba(232,57,74,0.08);
+    --gold: #f5c842;
+    --text: #f0f2f5;
+    --muted: #6b7280;
+    --muted2: #9ca3af;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── AMBIENT GLOWS ── */
+  .ambient {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .ambient-1 {
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(232,57,74,0.12), transparent 70%);
+    top: -200px; left: -200px;
+    animation: drift1 12s ease-in-out infinite alternate;
+  }
+  .ambient-2 {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(245,200,66,0.07), transparent 70%);
+    bottom: -100px; right: -100px;
+    animation: drift2 15s ease-in-out infinite alternate;
+  }
+  @keyframes drift1 { to { transform: translate(60px, 40px); } }
+  @keyframes drift2 { to { transform: translate(-40px, -60px); } }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 20px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    backdrop-filter: blur(20px);
+    background: rgba(5,8,15,0.7);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.2rem;
+    letter-spacing: -0.02em;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .nav-logo-dot {
+    width: 8px; height: 8px;
+    background: var(--red);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--red);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(0.8); } }
+  .nav-tag {
+    font-size: 0.72rem;
+    padding: 4px 12px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--muted2);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 120px 20px 80px;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 16px;
+    border: 1px solid rgba(232,57,74,0.3);
+    background: var(--red-soft);
+    border-radius: 30px;
+    font-size: 0.75rem;
+    color: #f87171;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 36px;
+    animation: fadeUp 0.6s ease both;
+  }
+  .hero-badge-dot {
+    width: 6px; height: 6px;
+    background: var(--red);
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+  }
+
+  .hero-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    margin-bottom: 24px;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+  .hero-title span {
+    background: linear-gradient(135deg, var(--red) 0%, #ff6b7a 50%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: var(--muted2);
+    max-width: 520px;
+    line-height: 1.7;
+    font-weight: 300;
+    margin-bottom: 48px;
+    animation: fadeUp 0.7s 0.2s ease both;
+  }
+
+  .hero-cta {
+    display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+    animation: fadeUp 0.7s 0.3s ease both;
+  }
+  .btn-primary {
+    padding: 14px 32px;
+    background: var(--red);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 30px var(--red-glow);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 40px var(--red-glow);
+  }
+  .btn-ghost {
+    padding: 14px 32px;
+    background: transparent;
+    color: var(--muted2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  .btn-ghost:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+
+  /* ── STATS ROW ── */
+  .stats-row {
+    display: flex; gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 64px;
+    background: var(--surface);
+    animation: fadeUp 0.7s 0.4s ease both;
+  }
+  .stat-item {
+    padding: 24px 40px;
+    border-right: 1px solid var(--border);
+    text-align: center;
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 2rem;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-num span { color: var(--red); }
+  .stat-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+  @keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+
+  /* ── SCROLL ARROW ── */
+  .scroll-hint {
+    position: absolute; bottom: 36px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    color: var(--muted);
+    font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+    animation: fadeIn 1s 1s ease both;
+  }
+  .scroll-arrow {
+    width: 24px; height: 24px;
+    border-right: 1.5px solid var(--muted);
+    border-bottom: 1.5px solid var(--muted);
+    transform: rotate(45deg);
+    animation: bounce 2s infinite;
+  }
+  @keyframes bounce { 0%,100% { transform:rotate(45deg) translateY(0); } 50% { transform:rotate(45deg) translateY(6px); } }
+  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+  /* ── SECTION WRAPPER ── */
+  .section {
+    position: relative; z-index: 1;
+    padding: 100px 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .section-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--red);
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 4vw, 3rem);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 20px;
+  }
+  .section-desc {
+    color: var(--muted2);
+    font-size: 1rem;
+    line-height: 1.7;
+    font-weight: 300;
+    max-width: 560px;
+  }
+
+  /* ── UPLOAD SECTION ── */
+  .upload-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 56px;
+  }
+  @media (max-width: 768px) { .upload-grid { grid-template-columns: 1fr; } }
+
+  .upload-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 36px;
+    transition: border-color 0.3s;
+  }
+  .upload-panel:hover { border-color: rgba(232,57,74,0.3); }
+
+  .drop-zone {
+    border: 1.5px dashed rgba(255,255,255,0.12);
+    border-radius: 12px;
+    padding: 48px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    background: rgba(255,255,255,0.01);
+  }
+  .drop-zone:hover, .drop-zone.drag-over {
+    border-color: var(--red);
+    background: var(--red-soft);
+  }
+  .drop-zone input {
+    position: absolute; inset: 0;
+    opacity: 0; cursor: pointer; width: 100%; height: 100%;
+  }
+
+  .drop-icon {
+    width: 56px; height: 56px;
+    margin: 0 auto 16px;
+    background: var(--red-soft);
+    border: 1px solid rgba(232,57,74,0.2);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .drop-icon svg { width: 24px; height: 24px; stroke: var(--red); }
+
+  .drop-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 6px;
+  }
+  .drop-sub { font-size: 0.82rem; color: var(--muted); }
+  .drop-formats {
+    display: flex; gap: 8px; justify-content: center; margin-top: 16px; flex-wrap: wrap;
+  }
+  .fmt-tag {
+    padding: 3px 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 0.7rem;
+    color: var(--muted2);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .preview-box {
+    margin-top: 20px;
+    display: none;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    position: relative;
+  }
+  .preview-box.visible { display: block; }
+  .preview-box img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+  }
+  .preview-label {
+    position: absolute; top: 10px; left: 10px;
+    background: rgba(5,8,15,0.85);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    color: var(--muted2);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .submit-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 16px;
+    background: var(--red);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px var(--red-glow);
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px var(--red-glow);
+  }
+  .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  /* spinner */
+  .spinner {
+    width: 18px; height: 18px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: none;
+  }
+  .spinner.active { display: block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── RESULT PANEL ── */
+  .result-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 36px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+
+  .result-empty {
+    text-align: center;
+    padding: 40px 0;
+  }
+  .result-empty-icon {
+    width: 64px; height: 64px;
+    margin: 0 auto 16px;
+    background: var(--surface2);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--border);
+  }
+  .result-empty-icon svg { width: 28px; height: 28px; stroke: var(--muted); }
+  .result-empty-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--muted2);
+    margin-bottom: 6px;
+  }
+  .result-empty-sub { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+
+  .result-content { display: none; }
+  .result-content.visible { display: block; }
+  .result-empty-state { display: block; }
+  .result-empty-state.hidden { display: none; }
+
+  .result-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 28px;
+  }
+  .result-title {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+  }
+  .result-status {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 0.72rem;
+    color: #34d399;
+    padding: 4px 12px;
+    background: rgba(52,211,153,0.1);
+    border: 1px solid rgba(52,211,153,0.2);
+    border-radius: 20px;
+  }
+  .status-dot { width: 6px; height: 6px; background: #34d399; border-radius: 50%; animation: pulse 1.5s infinite; }
+
+  .blood-group-display {
+    text-align: center;
+    padding: 32px 20px;
+    background: var(--surface2);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .blood-group-display::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 50% 100%, var(--red-soft), transparent 70%);
+    pointer-events: none;
+  }
+  .blood-drop {
+    font-size: 2.5rem;
+    margin-bottom: 8px;
+    animation: dropIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+  @keyframes dropIn { from { opacity:0; transform:scale(0.5) translateY(-20px); } to { opacity:1; transform:scale(1) translateY(0); } }
+  .blood-group-value {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 4.5rem;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--red), #ff8a8a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: dropIn 0.5s 0.1s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+  .blood-group-label {
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 6px;
+  }
+
+  .confidence-block { margin-bottom: 20px; }
+  .conf-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px;
+  }
+  .conf-label { font-size: 0.78rem; color: var(--muted2); }
+  .conf-value {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--text);
+  }
+  .conf-bar {
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .conf-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--red), #ff8a8a);
+    border-radius: 10px;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 12px var(--red-glow);
+  }
+
+  .result-meta {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 12px; margin-top: 16px;
+  }
+  .meta-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .meta-card-label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+  .meta-card-value { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--text); }
+
+  /* processing state */
+  .processing-state {
+    text-align: center; padding: 40px 0; display: none;
+  }
+  .processing-state.visible { display: block; }
+  .dna-loader {
+    display: flex; gap: 6px; justify-content: center; margin-bottom: 20px;
+  }
+  .dna-bar {
+    width: 4px; height: 40px;
+    background: var(--red);
+    border-radius: 4px;
+    animation: dna 1s ease-in-out infinite;
+    opacity: 0.7;
+  }
+  .dna-bar:nth-child(1) { animation-delay: 0s; }
+  .dna-bar:nth-child(2) { animation-delay: 0.1s; }
+  .dna-bar:nth-child(3) { animation-delay: 0.2s; }
+  .dna-bar:nth-child(4) { animation-delay: 0.3s; }
+  .dna-bar:nth-child(5) { animation-delay: 0.4s; }
+  @keyframes dna {
+    0%,100% { transform: scaleY(0.4); opacity: 0.4; }
+    50% { transform: scaleY(1); opacity: 1; }
+  }
+  .processing-text {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 1rem;
+    margin-bottom: 6px;
+  }
+  .processing-sub { font-size: 0.82rem; color: var(--muted); }
+
+  /* ── HOW IT WORKS ── */
+  .how-section {
+    position: relative; z-index: 1;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-top: 56px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  @media (max-width: 768px) { .steps-grid { grid-template-columns: 1fr 1fr; } }
+  .step-card {
+    padding: 32px 24px;
+    border-right: 1px solid var(--border);
+    position: relative;
+    transition: background 0.3s;
+  }
+  .step-card:last-child { border-right: none; }
+  .step-card:hover { background: var(--surface2); }
+  .step-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 3rem;
+    color: rgba(232,57,74,0.12);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+  .step-icon {
+    width: 40px; height: 40px;
+    background: var(--red-soft);
+    border: 1px solid rgba(232,57,74,0.2);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px;
+  }
+  .step-icon svg { width: 18px; height: 18px; stroke: var(--red); }
+  .step-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 0.95rem;
+    margin-bottom: 8px;
+  }
+  .step-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── TECH STACK ── */
+  .tech-pills {
+    display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px;
+  }
+  .tech-pill {
+    padding: 8px 18px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.82rem;
+    color: var(--muted2);
+    display: flex; align-items: center; gap: 8px;
+    transition: all 0.2s;
+  }
+  .tech-pill:hover { border-color: rgba(232,57,74,0.3); color: var(--text); }
+  .tech-pill-dot { width: 6px; height: 6px; background: var(--red); border-radius: 50%; flex-shrink: 0; }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative; z-index: 1;
+    padding: 48px 40px;
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 20px;
+  }
+  .footer-brand {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    letter-spacing: -0.02em;
+  }
+  .footer-note { font-size: 0.78rem; color: var(--muted); }
+  .footer-links { display: flex; gap: 20px; }
+  .footer-links a {
+    font-size: 0.78rem; color: var(--muted);
+    text-decoration: none; transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--text); }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 20px;
+    display: flex; align-items: center; gap: 12px;
+    font-size: 0.85rem;
+    transform: translateY(80px); opacity: 0;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 1000;
+    backdrop-filter: blur(20px);
+    max-width: 320px;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast-icon { flex-shrink: 0; }
+  .toast-msg { color: var(--text); }
+
+  /* responsive */
+  @media (max-width: 600px) {
+    nav { padding: 16px 20px; }
+    .stats-row { flex-direction: column; }
+    .stat-item { border-right: none; border-bottom: 1px solid var(--border); }
+    .stat-item:last-child { border-bottom: none; }
+    footer { flex-direction: column; text-align: center; }
+  }
+</style>
 </head>
 <body>
 
-<header>
-    <h1>AI Blood Group Detection</h1>
-    <p>Fingerprint-based deep learning prediction system</p>
-</header>
+<div class="ambient ambient-1"></div>
+<div class="ambient ambient-2"></div>
 
-<section class="predict-section">
-    <div class="card">
-        <h2>Upload Fingerprint</h2>
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-dot"></div>
+    DactoBlood AI
+  </div>
+  <span class="nav-tag">Beta · v1.0</span>
+</nav>
 
-        <form id="upload-form" enctype="multipart/form-data">
-            <input type="file" name="file" id="file-input" accept="image/*" required>
-            <button type="submit">Predict Blood Group</button>
-        </form>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">
+    <div class="hero-badge-dot"></div>
+    Non-Invasive · AI-Powered · Real-Time
+  </div>
 
-        <div id="preview-container" class="hidden">
-            <img id="preview-image">
-        </div>
+  <h1 class="hero-title">
+    Blood Group<br/>
+    <span>From Fingerprint</span>
+  </h1>
 
-        <div id="result" class="hidden">
-            <h3 id="prediction-text"></h3>
-            <p id="confidence-text"></p>
-            <div class="bar">
-                <div id="bar-fill"></div>
+  <p class="hero-sub">
+    Upload a fingerprint image and our CNN model analyzes ridge patterns to predict your blood group — no needles, no lab, no waiting.
+  </p>
+
+  <div class="hero-cta">
+    <a href="#predict" class="btn-primary">Try It Now →</a>
+    <a href="#how" class="btn-ghost">How It Works</a>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-item">
+      <div class="stat-num">8<span>+</span></div>
+      <div class="stat-label">Blood Groups</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">4</div>
+      <div class="stat-label">CNN Layers</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">64<span>²</span></div>
+      <div class="stat-label">Input Resolution</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">&lt;2<span>s</span></div>
+      <div class="stat-label">Inference Time</div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- UPLOAD + RESULT -->
+<div id="predict" style="position:relative;z-index:1;">
+  <div class="section">
+    <div class="section-label">Prediction Engine</div>
+    <h2 class="section-title">Analyze Your Fingerprint</h2>
+    <p class="section-desc">Upload a clear fingerprint image. Our deep learning model will classify your blood group in seconds.</p>
+
+    <div class="upload-grid">
+      <!-- LEFT: Upload -->
+      <div class="upload-panel">
+        <form id="upload-form">
+          <div class="drop-zone" id="drop-zone">
+            <input type="file" name="file" id="file-input" accept="image/*"/>
+            <div class="drop-icon">
+              <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
+              </svg>
             </div>
+            <div class="drop-title">Drop fingerprint image here</div>
+            <div class="drop-sub">or click to browse files</div>
+            <div class="drop-formats">
+              <span class="fmt-tag">JPG</span>
+              <span class="fmt-tag">PNG</span>
+              <span class="fmt-tag">BMP</span>
+              <span class="fmt-tag">TIFF</span>
+            </div>
+          </div>
+
+          <div class="preview-box" id="preview-box">
+            <span class="preview-label">Preview</span>
+            <img id="preview-image" src="" alt="Fingerprint preview"/>
+          </div>
+
+          <button type="submit" class="submit-btn" id="submit-btn">
+            <div class="spinner" id="spinner"></div>
+            <span id="btn-text">Analyze Fingerprint</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- RIGHT: Result -->
+      <div class="result-panel">
+
+        <!-- Empty state -->
+        <div class="result-empty-state" id="empty-state">
+          <div class="result-empty">
+            <div class="result-empty-icon">
+              <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/>
+              </svg>
+            </div>
+            <div class="result-empty-title">Awaiting Analysis</div>
+            <div class="result-empty-sub">Upload a fingerprint image and click Analyze to see your blood group prediction here.</div>
+          </div>
         </div>
+
+        <!-- Processing -->
+        <div class="processing-state" id="processing-state">
+          <div class="dna-loader">
+            <div class="dna-bar"></div>
+            <div class="dna-bar"></div>
+            <div class="dna-bar"></div>
+            <div class="dna-bar"></div>
+            <div class="dna-bar"></div>
+          </div>
+          <div class="processing-text">Analyzing ridge patterns…</div>
+          <div class="processing-sub">Running CNN inference · Please wait</div>
+        </div>
+
+        <!-- Result -->
+        <div class="result-content" id="result-content">
+          <div class="result-header">
+            <span class="result-title">Analysis Result</span>
+            <div class="result-status">
+              <div class="status-dot"></div>
+              Complete
+            </div>
+          </div>
+
+          <div class="blood-group-display">
+            <div class="blood-drop">🩸</div>
+            <div class="blood-group-value" id="blood-group-value">A+</div>
+            <div class="blood-group-label">Predicted Blood Group</div>
+          </div>
+
+          <div class="confidence-block">
+            <div class="conf-header">
+              <span class="conf-label">Confidence Score</span>
+              <span class="conf-value" id="conf-value-text">0%</span>
+            </div>
+            <div class="conf-bar">
+              <div class="conf-fill" id="conf-fill"></div>
+            </div>
+          </div>
+
+          <div class="result-meta">
+            <div class="meta-card">
+              <div class="meta-card-label">Model</div>
+              <div class="meta-card-value">Deep CNN</div>
+            </div>
+            <div class="meta-card">
+              <div class="meta-card-label">Status</div>
+              <div class="meta-card-value" style="color:#34d399">Verified ✓</div>
+            </div>
+          </div>
+
+          <p style="margin-top:16px;font-size:0.75rem;color:var(--muted);line-height:1.6;">
+            ⚠️ For research purposes only. Not a substitute for medical diagnosis.
+          </p>
+        </div>
+
+      </div>
     </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section id="how" class="how-section">
+  <div class="section" style="max-width:1100px;margin:0 auto;">
+    <div class="section-label">Architecture</div>
+    <h2 class="section-title">How It Works</h2>
+    <p class="section-desc">A full deep learning pipeline from fingerprint image to blood group prediction.</p>
+
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <div class="step-icon">
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
+          </svg>
+        </div>
+        <div class="step-title">Image Upload</div>
+        <div class="step-desc">User uploads a fingerprint image via Flask REST API endpoint.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <div class="step-icon">
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"/>
+          </svg>
+        </div>
+        <div class="step-title">Preprocessing</div>
+        <div class="step-desc">Resize to 64×64, RGB normalization, histogram equalization for consistency.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <div class="step-icon">
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 19.5V21M12 3v1.5m0 15V21m3.75-18v1.5m0 15V21m-9-1.5h10.5a2.25 2.25 0 002.25-2.25V6.75a2.25 2.25 0 00-2.25-2.25H6.75A2.25 2.25 0 004.5 6.75v10.5a2.25 2.25 0 002.25 2.25zm.75-12h9v9h-9v-9z"/>
+          </svg>
+        </div>
+        <div class="step-title">CNN Inference</div>
+        <div class="step-desc">4-block deep CNN extracts ridge features → Softmax outputs probability across 8 classes.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">04</div>
+        <div class="step-icon">
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <div class="step-title">Result Returned</div>
+        <div class="step-desc">Blood group + confidence score returned as JSON and displayed instantly.</div>
+      </div>
+    </div>
+
+    <div style="margin-top:60px;">
+      <div class="section-label">Tech Stack</div>
+      <h3 style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.4rem;margin:12px 0 0;letter-spacing:-0.02em;">Built With</h3>
+      <div class="tech-pills">
+        <div class="tech-pill"><div class="tech-pill-dot"></div>Python 3.x</div>
+        <div class="tech-pill"><div class="tech-pill-dot"></div>TensorFlow / Keras</div>
+        <div class="tech-pill"><div class="tech-pill-dot"></div>Flask REST API</div>
+        <div class="tech-pill"><div class="tech-pill-dot"></div>NumPy · Pillow</div>
+        <div class="tech-pill"><div class="tech-pill-dot"></div>Render Cloud</div>
+        <div class="tech-pill"><div class="tech-pill-dot"></div>Kaggle Dataset</div>
+        <div class="tech-pill"><div class="tech-pill-dot"></div>HTML / CSS / JS</div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<section class="how-it-works">
-    <div class="content">
-        <h2>How It Works</h2>
+<!-- DEVELOPER SECTION -->
+<section style="position:relative;z-index:1;border-top:1px solid var(--border);">
+  <div class="section" style="max-width:1100px;margin:0 auto;">
+    <div class="section-label">The Builder</div>
+    <h2 class="section-title">Meet the Developer</h2>
 
-        <p>
-            This system uses a Convolutional Neural Network (CNN) trained on fingerprint images
-            to classify blood groups.
-        </p>
+    <div style="display:flex;justify-content:center;margin-top:48px;">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:44px 56px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:20px;max-width:480px;width:100%;position:relative;overflow:hidden;">
+        <!-- glow -->
+        <div style="position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:200px;height:200px;background:radial-gradient(circle,var(--red-glow),transparent 70%);pointer-events:none;"></div>
 
-        <p>
-            When you upload a fingerprint image, it is resized to 64×64 pixels and normalized
-            before being passed to the trained deep learning model.
-        </p>
+        <!-- Avatar -->
+        <div style="width:88px;height:88px;background:linear-gradient(135deg,var(--red),#ff8a8a);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;color:white;box-shadow:0 0 40px var(--red-glow);flex-shrink:0;">
+          D
+        </div>
 
-        <p>
-            The CNN extracts unique ridge pattern features from the fingerprint
-            and compares them against patterns learned during training.
-        </p>
+        <!-- Name -->
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.35rem;letter-spacing:-0.02em;">C. Dinesh Kumar Reddy</div>
+          <div style="font-size:0.82rem;color:var(--muted);margin-top:5px;">AI Engineer</div>
+        </div>
 
-        <p>
-            The model outputs probabilities for all eight blood groups
-            (A+, A-, B+, B-, AB+, AB-, O+, O-).
-        </p>
+        <!-- Divider -->
+        <div style="width:100%;height:1px;background:var(--border);"></div>
 
-        <p>
-            The system selects the class with the highest probability
-            and displays both the predicted blood group and confidence score.
-        </p>
+        <!-- Contact details -->
+        <div style="display:flex;flex-direction:column;gap:10px;width:100%;">
+          <a href="mailto:chinnagulagaridineshreddy@gmail.com" style="padding:10px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;font-size:0.8rem;color:var(--muted2);display:flex;align-items:center;gap:10px;text-decoration:none;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(232,57,74,0.3)';this.style.color='var(--text)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted2)'">
+            <span>📧</span> chinnagulagaridineshreddy@gmail.com
+          </a>
+          <a href="tel:+918688023419" style="padding:10px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;font-size:0.8rem;color:var(--muted2);display:flex;align-items:center;gap:10px;text-decoration:none;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(232,57,74,0.3)';this.style.color='var(--text)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted2)'">
+            <span>📱</span> +91 86880 23419
+          </a>
+          <div style="padding:10px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;font-size:0.8rem;color:var(--muted2);display:flex;align-items:center;gap:10px;">
+            <span>📍</span> Bengaluru, India
+          </div>
+        </div>
 
-        <p>
-            The model is deployed on a cloud-based server using Flask and
-            served via Gunicorn for scalable inference.
-        </p>
+        <!-- Social buttons -->
+        <div style="display:flex;gap:12px;width:100%;">
+          <a href="https://linkedin.com/in/dineshhreddy" target="_blank" style="flex:1;padding:10px;background:var(--red-soft);border:1px solid rgba(232,57,74,0.3);border-radius:10px;font-size:0.8rem;color:#f87171;text-decoration:none;font-family:'Syne',sans-serif;font-weight:700;text-align:center;transition:all 0.2s;" onmouseover="this.style.background='var(--red)';this.style.color='white'" onmouseout="this.style.background='var(--red-soft)';this.style.color='#f87171'">LinkedIn ↗</a>
+          <a href="https://github.com/dineshreddynani" target="_blank" style="flex:1;padding:10px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;font-size:0.8rem;color:var(--muted2);text-decoration:none;font-family:'Syne',sans-serif;font-weight:700;text-align:center;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.2)';this.style.color='white'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted2)'">GitHub ↗</a>
+        </div>
+      </div>
     </div>
+  </div>
 </section>
 
-<script src="{{ url_for('static', filename='script.js') }}"></script>
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-brand">DactoBlood AI</div>
+    <div class="footer-note" style="margin-top:4px;">Final Year Project · MITS</div>
+  </div>
+  <div class="footer-links">
+    <a href="https://www.kaggle.com/datasets/rajumavinmar/finger-print-based-blood-group-dataset" target="_blank">Dataset ↗</a>
+    <a href="https://cnn-based-blood-group-classification.onrender.com" target="_blank">Live Demo ↗</a>
+  </div>
+  <div class="footer-note">For research purposes only. Not a medical device.</div>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-icon">⚠️</span>
+  <span class="toast-msg" id="toast-msg">Error message here</span>
+</div>
+
+<script>
+  // ── DRAG & DROP ──
+  const dropZone = document.getElementById('drop-zone');
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file) handleFile(file);
+  });
+
+  // ── FILE PREVIEW ──
+  const fileInput = document.getElementById('file-input');
+  const previewBox = document.getElementById('preview-box');
+  const previewImg = document.getElementById('preview-image');
+
+  fileInput.addEventListener('change', e => {
+    if (e.target.files[0]) handleFile(e.target.files[0]);
+  });
+
+  function handleFile(file) {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      previewImg.src = ev.target.result;
+      previewBox.classList.add('visible');
+    };
+    reader.readAsDataURL(file);
+    // sync to input
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    fileInput.files = dt.files;
+  }
+
+  // ── FORM SUBMIT ──
+  const form = document.getElementById('upload-form');
+  const submitBtn = document.getElementById('submit-btn');
+  const spinner = document.getElementById('spinner');
+  const btnText = document.getElementById('btn-text');
+
+  const emptyState = document.getElementById('empty-state');
+  const processingState = document.getElementById('processing-state');
+  const resultContent = document.getElementById('result-content');
+
+  const bloodGroupValue = document.getElementById('blood-group-value');
+  const confValueText = document.getElementById('conf-value-text');
+  const confFill = document.getElementById('conf-fill');
+
+  form.onsubmit = async function(e) {
+    e.preventDefault();
+
+    if (!fileInput.files[0]) {
+      showToast('⚠️ Please select a fingerprint image first.');
+      return;
+    }
+
+    // UI: loading
+    setLoading(true);
+    emptyState.classList.add('hidden');
+    processingState.classList.add('visible');
+    resultContent.classList.remove('visible');
+
+    try {
+      const formData = new FormData(this);
+      const response = await fetch('/predict', { method: 'POST', body: formData });
+      const result = await response.json();
+
+      if (result.prediction) {
+        const percent = parseFloat(result.confidence);
+
+        bloodGroupValue.textContent = result.prediction;
+        confValueText.textContent = result.confidence;
+
+        processingState.classList.remove('visible');
+        resultContent.classList.add('visible');
+
+        // animate bar after render
+        requestAnimationFrame(() => {
+          setTimeout(() => { confFill.style.width = percent + '%'; }, 50);
+        });
+
+        showToast('✅ Analysis complete!', true);
+      } else {
+        processingState.classList.remove('visible');
+        emptyState.classList.remove('hidden');
+        showToast('❌ ' + (result.error || 'Prediction failed.'));
+      }
+    } catch (err) {
+      processingState.classList.remove('visible');
+      emptyState.classList.remove('hidden');
+      showToast('❌ Server error. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  function setLoading(on) {
+    submitBtn.disabled = on;
+    spinner.classList.toggle('active', on);
+    btnText.textContent = on ? 'Analyzing…' : 'Analyze Fingerprint';
+  }
+
+  // ── TOAST ──
+  const toastEl = document.getElementById('toast');
+  const toastMsg = document.getElementById('toast-msg');
+  let toastTimer;
+  function showToast(msg, success = false) {
+    toastMsg.textContent = msg;
+    toastEl.style.borderColor = success ? 'rgba(52,211,153,0.3)' : 'rgba(232,57,74,0.3)';
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toastEl.classList.remove('show'), 3500);
+  }
+
+  // ── SCROLL ANIMATIONS ──
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.step-card, .upload-panel, .result-panel, .tech-pill').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    observer.observe(el);
+  });
+</script>
 </body>
 </html>
