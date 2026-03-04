@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, request, render_template, jsonify, send_from_directory
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import img_to_array
@@ -10,29 +10,22 @@ app = Flask(__name__)
 # -------------------------------
 # Recreate Model Architecture
 # -------------------------------
-
 def create_model():
     model = tf.keras.models.Sequential([
         tf.keras.layers.Conv2D(32, (3, 3), activation='relu', input_shape=(64, 64, 3)),
         tf.keras.layers.MaxPooling2D(2, 2),
-
         tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
         tf.keras.layers.MaxPooling2D(2, 2),
-
         tf.keras.layers.Conv2D(128, (3, 3), activation='relu'),
         tf.keras.layers.MaxPooling2D(2, 2),
-
         tf.keras.layers.Conv2D(256, (3, 3), activation='relu'),
         tf.keras.layers.MaxPooling2D(2, 2),
-
         tf.keras.layers.Flatten(),
         tf.keras.layers.Dense(512, activation='relu'),
         tf.keras.layers.Dropout(0.5),
-
         tf.keras.layers.Dense(8, activation='softmax')
     ])
     return model
-
 
 # Initialize model
 model = create_model()
@@ -42,15 +35,12 @@ model.load_weights('model/blood_group_model.h5')
 
 # Warm up model (important for Render cold start)
 model.predict(np.zeros((1, 64, 64, 3)))
-
 print("Model loaded successfully!")
 
 # -------------------------------
 # Class Labels
 # -------------------------------
-
 class_names = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
-
 correction_mapping = {
     'AB+': 'B+',
     'AB-': 'B-',
@@ -61,7 +51,6 @@ correction_mapping = {
 # -------------------------------
 # Image Preprocessing (Training Style)
 # -------------------------------
-
 def preprocess_image(image):
     try:
         img = image.convert('RGB')
@@ -74,24 +63,33 @@ def preprocess_image(image):
         print("Preprocessing error:", e)
         return None
 
-
 # -------------------------------
 # Routes
 # -------------------------------
-
 @app.route('/')
 def home():
     return render_template('index.html')
 
 
+# ── NEW: Serve dataset images for sample gallery ──
+# URL pattern : /dataset/<blood_group>/<filename>
+# Folder path : Dataset/dataset_blood_group/<blood_group>/<filename>
+# Example     : /dataset/A%2B/1.BMP  →  Dataset/dataset_blood_group/A+/1.BMP
+@app.route('/dataset/<blood_group>/<filename>')
+def serve_dataset_image(blood_group, filename):
+    dataset_dir = os.path.join(
+        os.path.dirname(__file__),
+        'Dataset', 'dataset_blood_group', blood_group
+    )
+    return send_from_directory(dataset_dir, filename)
+
+
 @app.route('/predict', methods=['POST'])
 def predict():
-
     if 'file' not in request.files:
         return jsonify({'error': 'No file uploaded'})
 
     file = request.files['file']
-
     if file.filename == '':
         return jsonify({'error': 'No selected file'})
 
