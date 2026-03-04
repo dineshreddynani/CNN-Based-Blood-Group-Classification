@@ -639,7 +639,7 @@ function selectSample(card, imgSrc, group, num) {
       previewBox.classList.add('visible');
 
       // Scroll up to analyzer
-      document.getElementById('submit-btn').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      document.getElementById('submit-btn').scrollIntoView({ behavior: 'smooth', block: 'end' });
       showToast(`${group} · Sample ${num} loaded — Click Analyze!`, true);
     })
     .catch(err => {
