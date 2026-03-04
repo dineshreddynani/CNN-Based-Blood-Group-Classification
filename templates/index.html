@@ -68,8 +68,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:68px;padding:0 48px;d
 @keyframes blobFloat{to{transform:translate(30px,20px) scale(1.05)}}
 .hero-fingerprint-art{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:340px;height:340px;opacity:0.12}
 .hero-fingerprint-art svg{width:100%;height:100%}
-
-/* floating cards on hero right */
 .hero-float-card{position:absolute;background:white;border-radius:16px;box-shadow:var(--shadow-lg);padding:16px 20px;animation:floatCard 6s ease-in-out infinite alternate}
 .hfc-1{top:15%;right:8%;animation-delay:0s}
 .hfc-2{top:45%;right:4%;animation-delay:2s}
@@ -81,11 +79,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:68px;padding:0 48px;d
 .hfc-val.coral{color:var(--coral)}
 .hfc-val.amber{color:var(--amber)}
 .hfc-sub{font-size:0.72rem;color:var(--muted);margin-top:2px}
-
 .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;background:var(--teal3);border:1px solid rgba(8,145,178,0.25);border-radius:20px;font-family:var(--mono);font-size:0.65rem;color:var(--teal);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:28px;animation:fadeUp 0.7s ease both}
 .hero-title{font-family:'Fraunces',serif;font-weight:700;font-size:clamp(2.8rem,5vw,4.2rem);line-height:1.08;letter-spacing:-0.02em;margin-bottom:12px;animation:fadeUp 0.7s 0.1s ease both}
 .hero-title .accent{color:var(--teal);font-style:italic}
-.hero-title .accent2{color:var(--coral)}
 .hero-sub-title{font-family:'Fraunces',serif;font-weight:300;font-style:italic;font-size:clamp(1.2rem,2vw,1.6rem);color:var(--muted);margin-bottom:24px;animation:fadeUp 0.7s 0.15s ease both}
 .hero-desc{font-size:1.05rem;color:var(--ink3);line-height:1.75;max-width:480px;margin-bottom:40px;font-weight:400;animation:fadeUp 0.7s 0.2s ease both}
 .hero-actions{display:flex;gap:14px;flex-wrap:wrap;animation:fadeUp 0.7s 0.25s ease both}
@@ -93,19 +89,16 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:68px;padding:0 48px;d
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(8,145,178,0.45)}
 .btn-secondary{padding:14px 32px;background:white;color:var(--ink2);border:1.5px solid var(--border2);border-radius:10px;font-family:'Outfit',sans-serif;font-weight:600;font-size:0.92rem;cursor:pointer;text-decoration:none;transition:all 0.3s ease}
 .btn-secondary:hover{border-color:var(--teal);color:var(--teal);background:var(--teal4)}
-
-/* hero stats strip */
 .hero-stats{display:flex;gap:0;border-top:1px solid var(--border);margin-top:48px;padding-top:32px;animation:fadeUp 0.7s 0.3s ease both}
 .hstat{flex:1;padding-right:28px;border-right:1px solid var(--border);margin-right:28px}
 .hstat:last-child{border-right:none;padding-right:0;margin-right:0}
 .hstat-num{font-family:'Fraunces',serif;font-weight:700;font-size:2rem;line-height:1;margin-bottom:2px;color:var(--ink)}
 .hstat-num span{color:var(--teal)}
 .hstat-lbl{font-size:0.75rem;color:var(--muted);font-weight:500}
-
 @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
-/* SECTION COMMON */
+/* SECTION */
 .section{padding:96px 64px;max-width:1280px;margin:0 auto}
 .section-chip{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:20px;font-family:var(--mono);font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:20px;font-weight:500}
 .chip-teal{background:var(--teal3);color:var(--teal);border:1px solid rgba(8,145,178,0.2)}
@@ -117,23 +110,19 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:68px;padding:0 48px;d
 .section-title .coral{color:var(--coral)}
 .section-desc{font-size:1.05rem;color:var(--muted);line-height:1.75;max-width:520px;font-weight:400}
 
-/* PREDICT SECTION */
+/* PREDICT */
 .predict-bg{background:white;border-top:3px solid transparent;border-image:linear-gradient(90deg,var(--teal),var(--coral),var(--amber)) 1}
 .predict-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:48px}
 @media(max-width:960px){.predict-grid{grid-template-columns:1fr}}
-
 .card{background:white;border:1.5px solid var(--border);border-radius:20px;padding:36px;box-shadow:var(--shadow);transition:box-shadow 0.3s}
 .card:hover{box-shadow:var(--shadow-lg)}
 .card-head{display:flex;align-items:center;gap:10px;margin-bottom:28px}
 .card-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center}
 .card-icon svg{width:18px;height:18px}
-.ci-teal{background:var(--teal3)}
-.ci-teal svg{stroke:var(--teal)}
-.ci-coral{background:var(--coral4)}
-.ci-coral svg{stroke:var(--coral)}
+.ci-teal{background:var(--teal3)}.ci-teal svg{stroke:var(--teal)}
+.ci-coral{background:var(--coral4)}.ci-coral svg{stroke:var(--coral)}
 .card-title{font-weight:700;font-size:1rem;color:var(--ink)}
 .card-sub{font-size:0.78rem;color:var(--muted);margin-top:1px}
-
 .drop-zone{border:2px dashed var(--border2);border-radius:14px;padding:44px 24px;text-align:center;cursor:pointer;transition:all 0.3s;position:relative;background:var(--bg)}
 .drop-zone:hover,.drop-zone.drag-over{border-color:var(--teal);background:var(--teal4)}
 .drop-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
@@ -143,12 +132,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:68px;padding:0 48px;d
 .drop-sub{font-size:0.85rem;color:var(--muted)}
 .drop-formats{display:flex;gap:6px;justify-content:center;margin-top:14px;flex-wrap:wrap}
 .fmt{padding:3px 10px;background:white;border:1px solid var(--border);border-radius:6px;font-family:var(--mono);font-size:0.6rem;color:var(--muted);letter-spacing:0.08em}
-
 .preview-box{margin-top:18px;display:none;border-radius:12px;overflow:hidden;border:1.5px solid var(--border);position:relative}
 .preview-box.visible{display:block}
 .preview-box img{width:100%;height:180px;object-fit:cover;display:block}
 .preview-chip{position:absolute;top:10px;left:10px;background:rgba(255,255,255,0.95);backdrop-filter:blur(8px);border:1px solid var(--border);padding:4px 10px;border-radius:8px;font-family:var(--mono);font-size:0.6rem;color:var(--teal);letter-spacing:0.08em;text-transform:uppercase}
-
 .analyze-btn{width:100%;margin-top:18px;padding:16px;background:linear-gradient(135deg,var(--teal),var(--teal2));color:white;border:none;border-radius:12px;font-family:'Outfit',sans-serif;font-weight:700;font-size:0.95rem;letter-spacing:0.02em;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 4px 16px rgba(8,145,178,0.3)}
 .analyze-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 28px rgba(8,145,178,0.4)}
 .analyze-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none}
@@ -166,19 +153,16 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:68px;padding:0 48px;d
 .processing-state{display:none;text-align:center;padding:40px 20px}
 .processing-state.visible{display:block}
 .result-data{display:none}.result-data.visible{display:block}
-
 .dna-wrap{display:flex;gap:5px;justify-content:center;margin-bottom:24px}
 .dna-b{width:4px;height:40px;background:linear-gradient(to top,var(--teal),var(--coral));border-radius:4px;animation:dnaAnim 1s ease-in-out infinite;opacity:0.7}
 .dna-b:nth-child(1){animation-delay:0s}.dna-b:nth-child(2){animation-delay:0.1s}.dna-b:nth-child(3){animation-delay:0.2s}.dna-b:nth-child(4){animation-delay:0.3s}.dna-b:nth-child(5){animation-delay:0.4s}
 @keyframes dnaAnim{0%,100%{transform:scaleY(0.35);opacity:0.35}50%{transform:scaleY(1);opacity:1}}
 .proc-title{font-family:'Fraunces',serif;font-weight:600;font-size:1.1rem;color:var(--ink2);margin-bottom:6px}
 .proc-sub{font-family:var(--mono);font-size:0.65rem;color:var(--muted);letter-spacing:0.08em}
-
 .result-badge-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
 .res-label{font-family:var(--mono);font-size:0.6rem;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase}
 .res-verified{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:0.6rem;color:var(--emerald);letter-spacing:0.08em;padding:4px 10px;background:var(--emerald3);border:1px solid rgba(5,150,105,0.2);border-radius:8px}
 .res-verified-dot{width:5px;height:5px;background:var(--emerald);border-radius:50%;animation:blink 1.5s infinite}
-
 .blood-result-card{background:linear-gradient(135deg,var(--teal4),var(--coral4));border:1.5px solid rgba(8,145,178,0.15);border-radius:16px;padding:32px 24px;text-align:center;margin-bottom:24px;position:relative;overflow:hidden}
 .blood-result-card::before{content:'';position:absolute;top:-40px;right:-40px;width:120px;height:120px;background:radial-gradient(circle,rgba(8,145,178,0.15),transparent);border-radius:50%}
 .blood-result-card::after{content:'';position:absolute;bottom:-30px;left:-30px;width:100px;height:100px;background:radial-gradient(circle,rgba(244,63,94,0.12),transparent);border-radius:50%}
@@ -186,19 +170,16 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:68px;padding:0 48px;d
 .brc-value{font-family:'Fraunces',serif;font-weight:700;font-size:5.5rem;line-height:1;background:linear-gradient(135deg,var(--teal),var(--coral));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both}
 @keyframes popIn{from{opacity:0;transform:scale(0.5)}to{opacity:1;transform:scale(1)}}
 .brc-sub{font-size:0.8rem;color:var(--muted);margin-top:6px;font-weight:500}
-
 .conf-section{margin-bottom:20px}
 .conf-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .conf-lbl{font-size:0.82rem;color:var(--muted);font-weight:500}
 .conf-num{font-family:'Fraunces',serif;font-weight:700;font-size:1.1rem;color:var(--ink)}
 .conf-bar{height:8px;background:var(--bg);border-radius:8px;overflow:hidden;border:1px solid var(--border)}
 .conf-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--teal),var(--teal2),var(--coral));border-radius:8px;transition:width 1.2s cubic-bezier(0.4,0,0.2,1)}
-
 .meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
 .meta-box{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:14px}
 .meta-lbl{font-family:var(--mono);font-size:0.58rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px}
 .meta-val{font-weight:700;font-size:0.95rem;color:var(--ink)}
-
 .disclaimer-bar{padding:12px 16px;background:linear-gradient(90deg,rgba(244,63,94,0.06),rgba(244,63,94,0.02));border:1px solid rgba(244,63,94,0.15);border-radius:10px;font-size:0.78rem;color:var(--coral);font-weight:500;display:flex;align-items:center;gap:8px}
 
 /* GALLERY */
@@ -243,8 +224,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:68px;padding:0 48px;d
 .sib-4{background:var(--emerald3)}.sib-4 svg{stroke:var(--emerald)}
 .step-title{font-weight:700;font-size:1rem;color:var(--ink);margin-bottom:8px}
 .step-desc{font-size:0.85rem;color:var(--muted);line-height:1.65}
-
-/* TECH STACK */
 .tech-wrap{display:flex;flex-wrap:wrap;gap:10px;margin-top:32px}
 .tech-tag{padding:8px 18px;background:white;border:1.5px solid var(--border);border-radius:10px;font-size:0.82rem;font-weight:600;color:var(--ink2);transition:all 0.2s;display:flex;align-items:center;gap:8px}
 .tech-tag:hover{border-color:var(--teal);color:var(--teal);background:var(--teal4)}
@@ -279,25 +258,11 @@ footer{background:var(--ink);padding:40px 64px;display:flex;align-items:center;j
 .footer-links a{font-size:0.82rem;color:var(--muted2);text-decoration:none;transition:color 0.2s;font-weight:500}
 .footer-links a:hover{color:var(--teal2)}
 .footer-copy{font-size:0.75rem;color:var(--muted2)}
-
-/* TOAST */
 .toast{position:fixed;bottom:28px;right:28px;background:white;border:1.5px solid var(--border);border-radius:14px;padding:14px 20px;display:flex;align-items:center;gap:12px;font-size:0.82rem;font-weight:500;color:var(--ink2);transform:translateY(80px);opacity:0;transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);z-index:1000;box-shadow:var(--shadow-lg);max-width:340px}
 .toast.show{transform:translateY(0);opacity:1}
 
-/* RESPONSIVE */
-@media(max-width:1024px){
-  .hero{grid-template-columns:1fr;min-height:auto}
-  .hero-right{display:none}
-  .hero-left{padding:100px 40px 60px}
-}
-@media(max-width:768px){
-  nav{padding:0 20px}
-  .section{padding:72px 20px}
-  footer{padding:32px 20px;flex-direction:column;text-align:center}
-  .hero-left{padding:90px 20px 60px}
-  .hero-stats{flex-wrap:wrap}
-  .hstat{flex:1 0 45%}
-}
+@media(max-width:1024px){.hero{grid-template-columns:1fr;min-height:auto}.hero-right{display:none}.hero-left{padding:100px 40px 60px}}
+@media(max-width:768px){nav{padding:0 20px}.section{padding:72px 20px}footer{padding:32px 20px;flex-direction:column;text-align:center}.hero-left{padding:90px 20px 60px}.hero-stats{flex-wrap:wrap}.hstat{flex:1 0 45%}}
 </style>
 </head>
 <body>
@@ -319,10 +284,7 @@ footer{background:var(--ink);padding:40px 64px;display:flex;align-items:center;j
 <section class="hero">
   <div class="hero-left">
     <div class="hero-eyebrow">🔬 Deep Learning · Medical AI</div>
-    <h1 class="hero-title">
-      Detect Blood Group<br/>
-      <span class="accent">From Fingerprint</span>
-    </h1>
+    <h1 class="hero-title">Detect Blood Group<br/><span class="accent">From Fingerprint</span></h1>
     <p class="hero-sub-title">Non-invasive · Instant · Accurate</p>
     <p class="hero-desc">Our CNN model analyzes fingerprint ridge patterns to predict blood groups — no needles, no lab, no waiting. Upload a fingerprint and get results in under 2 seconds.</p>
     <div class="hero-actions">
@@ -341,23 +303,9 @@ footer{background:var(--ink);padding:40px 64px;display:flex;align-items:center;j
     <div class="hero-blob hero-blob-1"></div>
     <div class="hero-blob hero-blob-2"></div>
     <div class="hero-blob hero-blob-3"></div>
-    <!-- Floating stat cards -->
-    <div class="hero-float-card hfc-1">
-      <div class="hfc-label">Prediction</div>
-      <div class="hfc-val teal">A+</div>
-      <div class="hfc-sub">Blood Group</div>
-    </div>
-    <div class="hero-float-card hfc-2">
-      <div class="hfc-label">Confidence</div>
-      <div class="hfc-val coral">94.2%</div>
-      <div class="hfc-sub">Model Score</div>
-    </div>
-    <div class="hero-float-card hfc-3">
-      <div class="hfc-label">Inference</div>
-      <div class="hfc-val amber">1.3s</div>
-      <div class="hfc-sub">Response Time</div>
-    </div>
-    <!-- fingerprint SVG art -->
+    <div class="hero-float-card hfc-1"><div class="hfc-label">Prediction</div><div class="hfc-val teal">A+</div><div class="hfc-sub">Blood Group</div></div>
+    <div class="hero-float-card hfc-2"><div class="hfc-label">Confidence</div><div class="hfc-val coral">94.2%</div><div class="hfc-sub">Model Score</div></div>
+    <div class="hero-float-card hfc-3"><div class="hfc-label">Inference</div><div class="hfc-val amber">1.3s</div><div class="hfc-sub">Response Time</div></div>
     <div class="hero-fingerprint-art">
       <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" fill="none">
         <ellipse cx="100" cy="100" rx="12" ry="10" stroke="#0891b2" stroke-width="2"/>
@@ -380,22 +328,16 @@ footer{background:var(--ink);padding:40px 64px;display:flex;align-items:center;j
     <div class="section-chip chip-teal">🧬 01 — Analysis Engine</div>
     <h2 class="section-title">Analyze Your <em>Fingerprint</em></h2>
     <p class="section-desc">Upload a fingerprint image or pick from sample images below. The CNN model classifies your blood group with a confidence score.</p>
-
     <div class="predict-grid">
-      <!-- Upload Card -->
       <div class="card">
         <div class="card-head">
-          <div class="card-icon ci-teal">
-            <svg fill="none" viewBox="0 0 24 24" stroke-width="1.8" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
-          </div>
+          <div class="card-icon ci-teal"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.8" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg></div>
           <div><div class="card-title">Upload Image</div><div class="card-sub">Drag & drop or click to browse</div></div>
         </div>
         <form id="upload-form">
           <div class="drop-zone" id="drop-zone">
             <input type="file" name="file" id="file-input" accept="image/*"/>
-            <div class="drop-icon-bg">
-              <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
-            </div>
+            <div class="drop-icon-bg"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg></div>
             <div class="drop-title">Drop fingerprint here</div>
             <div class="drop-sub">or click to select file</div>
             <div class="drop-formats"><span class="fmt">JPG</span><span class="fmt">PNG</span><span class="fmt">BMP</span><span class="fmt">TIFF</span></div>
@@ -410,30 +352,21 @@ footer{background:var(--ink);padding:40px 64px;display:flex;align-items:center;j
           </button>
         </form>
       </div>
-
-      <!-- Result Card -->
       <div class="card">
         <div class="card-head">
-          <div class="card-icon ci-coral">
-            <svg fill="none" viewBox="0 0 24 24" stroke-width="1.8" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
-          </div>
+          <div class="card-icon ci-coral"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.8" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg></div>
           <div><div class="card-title">Prediction Output</div><div class="card-sub">Real-time classification result</div></div>
         </div>
-
         <div class="empty-state" id="empty-state">
-          <div class="empty-icon-ring">
-            <svg fill="none" viewBox="0 0 24 24" stroke-width="1.2" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
-          </div>
+          <div class="empty-icon-ring"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.2" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg></div>
           <div class="empty-title">Awaiting Analysis</div>
           <div class="empty-sub">Upload a fingerprint image or pick a sample to begin classification.</div>
         </div>
-
         <div class="processing-state" id="processing-state">
           <div class="dna-wrap"><div class="dna-b"></div><div class="dna-b"></div><div class="dna-b"></div><div class="dna-b"></div><div class="dna-b"></div></div>
           <div class="proc-title">Analyzing Ridge Patterns…</div>
           <div class="proc-sub">Running CNN inference · Please wait</div>
         </div>
-
         <div class="result-data" id="result-data">
           <div class="result-badge-row">
             <span class="res-label">Classification Result</span>
@@ -445,10 +378,7 @@ footer{background:var(--ink);padding:40px 64px;display:flex;align-items:center;j
             <div class="brc-sub">ABO · Rh Factor Classification</div>
           </div>
           <div class="conf-section">
-            <div class="conf-header">
-              <span class="conf-lbl">Confidence Score</span>
-              <span class="conf-num" id="conf-num">—</span>
-            </div>
+            <div class="conf-header"><span class="conf-lbl">Confidence Score</span><span class="conf-num" id="conf-num">—</span></div>
             <div class="conf-bar"><div class="conf-fill" id="conf-fill"></div></div>
           </div>
           <div class="meta-grid">
@@ -467,8 +397,7 @@ footer{background:var(--ink);padding:40px 64px;display:flex;align-items:center;j
   <div class="section">
     <div class="section-chip chip-violet">🖼️ 02 — Sample Testing</div>
     <h2 class="section-title">Try a <span class="coral">Sample Image</span></h2>
-    <p class="section-desc">Select any fingerprint from our sample dataset. Click an image to instantly load it into the analyzer above.</p>
-
+    <p class="section-desc">Select any fingerprint from the dataset. Click an image to instantly load it into the analyzer above.</p>
     <div class="blood-tabs" id="blood-tabs" style="margin-top:36px">
       <button class="blood-tab active" data-group="A+">A+</button>
       <button class="blood-tab" data-group="A-">A−</button>
@@ -490,7 +419,6 @@ footer{background:var(--ink);padding:40px 64px;display:flex;align-items:center;j
     <div class="section-chip chip-teal">⚙️ 03 — Methodology</div>
     <h2 class="section-title">How It <em>Works</em></h2>
     <p class="section-desc">A complete deep learning pipeline — from raw fingerprint to blood group classification in under 2 seconds.</p>
-
     <div class="steps-grid">
       <div class="step-card" data-num="01">
         <div class="step-icon-box sib-1"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.8" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg></div>
@@ -513,7 +441,6 @@ footer{background:var(--ink);padding:40px 64px;display:flex;align-items:center;j
         <div class="step-desc">Blood group + confidence score returned as JSON and rendered instantly in the UI.</div>
       </div>
     </div>
-
     <div style="margin-top:64px">
       <div class="section-chip chip-amber" style="margin-bottom:16px">🛠️ 04 — Tech Stack</div>
       <h3 style="font-family:'Fraunces',serif;font-weight:700;font-size:1.8rem;letter-spacing:-0.02em;margin-bottom:20px">Built <em style="font-style:italic;color:var(--teal)">With</em></h3>
@@ -582,7 +509,6 @@ const dropZone=document.getElementById('drop-zone');
 dropZone.addEventListener('dragover',e=>{e.preventDefault();dropZone.classList.add('drag-over')});
 dropZone.addEventListener('dragleave',()=>dropZone.classList.remove('drag-over'));
 dropZone.addEventListener('drop',e=>{e.preventDefault();dropZone.classList.remove('drag-over');const f=e.dataTransfer.files[0];if(f)handleFile(f)});
-
 const fileInput=document.getElementById('file-input');
 const previewBox=document.getElementById('preview-box');
 const previewImg=document.getElementById('preview-image');
@@ -650,72 +576,101 @@ function showToast(msg,success=false){
   toastTimer=setTimeout(()=>toastEl.classList.remove('show'),3500);
 }
 
-// ── SAMPLE GALLERY ──
-const SAMPLES_PER_GROUP=15;
-let selectedCard=null;
+// ══════════════════════════════════════════════
+// SAMPLE GALLERY
+// ──────────────────────────────────────────────
+// HOW IT WORKS:
+//   URL  → /dataset/<group>/<n>.BMP
+//   Flask route (app.py) → serve_dataset_image()
+//   Disk → Dataset/dataset_blood_group/<group>/<n>.BMP
+//
+// CHANGE THIS NUMBER to match your actual image count:
+const SAMPLES_PER_GROUP = 15;
+// ══════════════════════════════════════════════
 
-function getImageUrl(group,index){
-  return `/static/samples/${encodeURIComponent(group)}/${index}.jpg`;
+let selectedCard = null;
+
+function getImageUrl(group, index) {
+  // encodeURIComponent handles A+ → A%2B, AB+ → AB%2B etc.
+  return `/dataset/${encodeURIComponent(group)}/${index}.BMP`;
 }
 
-function renderGallery(group){
-  const grid=document.getElementById('sample-grid');
-  grid.innerHTML='';
-  for(let i=1;i<=SAMPLES_PER_GROUP;i++){
-    const imgSrc=getImageUrl(group,i);
-    const card=document.createElement('div');
-    card.className='sample-card';
-    const numStr=i<10?'0'+i:''+i;
-    card.innerHTML=`
+function renderGallery(group) {
+  const grid = document.getElementById('sample-grid');
+  grid.innerHTML = '';
+  for (let i = 1; i <= SAMPLES_PER_GROUP; i++) {
+    const imgSrc = getImageUrl(group, i);
+    const numStr = i < 10 ? '0' + i : '' + i;
+    const card = document.createElement('div');
+    card.className = 'sample-card';
+    card.innerHTML = `
       <div class="sample-img-wrap">
-        <img src="${imgSrc}" alt="Sample ${group} #${i}" loading="lazy"
-          onerror="this.parentElement.style.background='var(--bg)';this.style.opacity='0'"/>
+        <img src="${imgSrc}" alt="${group} sample ${i}" loading="lazy"
+          onerror="this.parentElement.style.background='var(--bg)';this.style.display='none'"/>
         <div class="sample-overlay"><span class="sample-use-btn">Use This ↑</span></div>
         <div class="selected-check">✓</div>
       </div>
       <div class="sample-footer">
         <span class="sample-group-tag">${group}</span>
-        <span class="sample-num">·${numStr}</span>
+        <span class="sample-num">· ${numStr}</span>
       </div>`;
-    card.addEventListener('click',()=>selectSample(card,imgSrc,group,i));
+    card.addEventListener('click', () => selectSample(card, imgSrc, group, i));
     grid.appendChild(card);
   }
 }
 
-function selectSample(card,imgSrc,group,num){
-  if(selectedCard)selectedCard.classList.remove('selected');
+function selectSample(card, imgSrc, group, num) {
+  // Deselect previous
+  if (selectedCard) selectedCard.classList.remove('selected');
   card.classList.add('selected');
-  selectedCard=card;
+  selectedCard = card;
+
   fetch(imgSrc)
-    .then(r=>{if(!r.ok)throw new Error();return r.blob()})
-    .then(blob=>{
-      const file=new File([blob],`sample_${group}_${num}.jpg`,{type:'image/jpeg'});
-      const dt=new DataTransfer();dt.items.add(file);fileInput.files=dt.files;
-      previewImg.src=imgSrc;
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.blob(); })
+    .then(blob => {
+      // Create a File object from the BMP blob so Flask can receive it
+      const file = new File([blob], `${group}_${num}.BMP`, { type: 'image/bmp' });
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      fileInput.files = dt.files;
+
+      // Show preview
+      previewImg.src = imgSrc;
       previewBox.classList.add('visible');
-      document.getElementById('predict').scrollIntoView({behavior:'smooth',block:'start'});
-      showToast(`${group} · Sample ${num} loaded — Click Analyze!`,true);
+
+      // Scroll up to analyzer
+      document.getElementById('predict').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      showToast(`${group} · Sample ${num} loaded — Click Analyze!`, true);
     })
-    .catch(()=>showToast('Image not found. Add images to static/samples/'+group+'/'));
+    .catch(err => {
+      console.error('Sample load error:', err);
+      showToast(`❌ Could not load ${group}/${num}.BMP — check Dataset folder`);
+    });
 }
 
-document.getElementById('blood-tabs').addEventListener('click',e=>{
-  const tab=e.target.closest('.blood-tab');
-  if(!tab)return;
-  document.querySelectorAll('.blood-tab').forEach(t=>t.classList.remove('active'));
+// Tab click handler
+document.getElementById('blood-tabs').addEventListener('click', e => {
+  const tab = e.target.closest('.blood-tab');
+  if (!tab) return;
+  document.querySelectorAll('.blood-tab').forEach(t => t.classList.remove('active'));
   tab.classList.add('active');
-  selectedCard=null;
+  selectedCard = null;
   renderGallery(tab.dataset.group);
 });
+
+// Initial render
 renderGallery('A+');
 
 // ── SCROLL REVEAL ──
-const io=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)'}})
-},{threshold:0.08});
-document.querySelectorAll('.step-card,.card,.tech-tag,.dev-card,.hfc-1,.hfc-2,.hfc-3').forEach(el=>{
-  el.style.opacity='0';el.style.transform='translateY(16px)';
-  el.style.transition='opacity 0.5s ease, transform 0.5s ease';
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; }
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.step-card,.card,.tech-tag,.dev-card,.hfc-1,.hfc-2,.hfc-3').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(16px)';
+  el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
   io.observe(el);
 });
 </script>
